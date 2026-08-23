@@ -1,0 +1,758 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" id="themeColor" content="#0b4a53">
+  <meta name="description" content="Searchable Ventura Penal Code organized into twelve legal titles with related-offense discovery.">
+  <title>Ventura Penal Code</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #183236;
+      --muted: #61777a;
+      --page: #f3efe5;
+      --navy: #0b4a53;
+      --surface: #fffdf8;
+      --surface-2: #e7f0ed;
+      --line: rgba(27, 82, 86, .14);
+      --line-strong: rgba(27, 82, 86, .25);
+      --gold: #c87e32;
+      --gold-soft: rgba(200, 126, 50, .12);
+      --primary: #087f8c;
+      --primary-soft: rgba(8, 127, 140, .1);
+      --infraction: #1977b8;
+      --misdemeanor: #bf671f;
+      --felony: #c33b50;
+      --capital: #248553;
+      --shadow: 0 22px 60px rgba(25, 61, 61, .13);
+      --sans: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      --serif: Georgia, "Times New Roman", serif;
+    }
+
+    html[data-theme="dark"] {
+      color-scheme: dark;
+      --ink: #edf7f5;
+      --muted: #9eb4b3;
+      --page: #061518;
+      --navy: #082f36;
+      --surface: #0c2328;
+      --surface-2: #133139;
+      --line: rgba(157, 209, 207, .15);
+      --line-strong: rgba(157, 209, 207, .27);
+      --gold: #e9ac61;
+      --gold-soft: rgba(233, 172, 97, .13);
+      --primary: #52c7c8;
+      --primary-soft: rgba(82, 199, 200, .12);
+      --infraction: #64b6ff;
+      --misdemeanor: #ffab67;
+      --felony: #ff7184;
+      --capital: #65dc91;
+      --shadow: 0 28px 80px rgba(0, 0, 0, .3);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 88% -10%, rgba(46, 150, 158, .17), transparent 33rem),
+        radial-gradient(circle at -8% 8%, rgba(222, 154, 78, .13), transparent 27rem),
+        var(--page);
+      color: var(--ink);
+      font-family: var(--sans);
+      line-height: 1.5;
+    }
+    html[data-theme="dark"] body {
+      background:
+        radial-gradient(circle at 88% -10%, rgba(36, 139, 145, .19), transparent 33rem),
+        radial-gradient(circle at -8% 8%, rgba(203, 125, 50, .08), transparent 27rem),
+        var(--page);
+    }
+    button, input, select { font: inherit; }
+    button, select { cursor: pointer; }
+    a { color: inherit; }
+    :focus-visible { outline: 3px solid rgba(8, 127, 140, .42); outline-offset: 2px; }
+
+    .site-header {
+      position: relative;
+      overflow: hidden;
+      border-bottom: 1px solid var(--line);
+      background:
+        radial-gradient(circle at 84% 0%, rgba(89, 181, 180, .24), transparent 28rem),
+        linear-gradient(135deg, #0d5660, #073a43 68%);
+      color: #f5fbfa;
+    }
+    .site-header::after {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(90deg, transparent 0 79px, rgba(255,255,255,.025) 80px);
+      content: "";
+      pointer-events: none;
+    }
+    .masthead {
+      position: relative;
+      z-index: 1;
+      width: min(1400px, calc(100% - 40px));
+      margin: 0 auto;
+      padding: 34px 0 30px;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .brand { min-width: 0; }
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: clamp(28px, 4vw, 42px);
+      font-weight: 600;
+      letter-spacing: -.025em;
+      line-height: 1.05;
+    }
+    h1 {
+      animation: ventura-category-cycle 9s ease-in-out infinite;
+    }
+    @keyframes ventura-category-cycle {
+      0%, 100% { color: var(--infraction); }
+      25% { color: var(--misdemeanor); }
+      50% { color: var(--felony); }
+      75% { color: var(--capital); }
+    }
+    .subtitle { margin: 7px 0 0; color: #bed4d3; font-size: 13px; }
+    .masthead-meta {
+      margin-left: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .theme-button {
+      min-height: 39px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 13px;
+      border: 1px solid rgba(194, 238, 235, .3);
+      border-radius: 11px;
+      background: rgba(3, 31, 36, .18);
+      color: #effcf9;
+      font-weight: 700;
+      transition: transform .18s ease, background .18s ease, border-color .18s ease;
+    }
+    .theme-button:hover { transform: translateY(-1px); background: rgba(212, 244, 241, .15); border-color: rgba(212, 244, 241, .62); }
+    .theme-icon { width: 17px; font-size: 15px; text-align: center; }
+
+    .mobile-chapter-bar {
+      display: none;
+      width: min(1400px, calc(100% - 30px));
+      margin: 18px auto 0;
+    }
+    .mobile-chapter-bar label { display: block; margin-bottom: 6px; color: var(--muted); font-size: 11px; font-weight: 700; }
+
+    .book-layout {
+      width: min(1400px, calc(100% - 40px));
+      margin: 28px auto 64px;
+      display: grid;
+      grid-template-columns: 280px minmax(0, 1fr);
+      gap: 26px;
+      align-items: start;
+    }
+    .toc {
+      position: sticky;
+      top: 20px;
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 253, 248, .9);
+      box-shadow: 0 18px 50px rgba(25, 61, 61, .1);
+      backdrop-filter: blur(18px);
+    }
+    html[data-theme="dark"] .toc { background: rgba(10, 31, 36, .9); box-shadow: 0 18px 50px rgba(0, 0, 0, .18); }
+    .toc-header {
+      padding: 17px 17px 13px;
+      border-bottom: 1px solid var(--line);
+    }
+    .toc-kicker { display: block; color: var(--gold); font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    .toc-title { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-top: 3px; }
+    .toc-title strong { font-family: var(--serif); font-size: 20px; }
+    .toc-title span { color: var(--muted); font-size: 11px; }
+    .toc-list { padding: 8px; }
+    .toc-link {
+      display: grid;
+      grid-template-columns: 31px minmax(0, 1fr) auto;
+      gap: 8px;
+      align-items: center;
+      min-height: 40px;
+      padding: 7px 9px;
+      border-radius: 10px;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .15s ease, background .15s ease;
+    }
+    .toc-link:hover, .toc-link.is-active { background: rgba(8, 127, 140, .09); color: var(--ink); }
+    html[data-theme="dark"] .toc-link:hover,
+    html[data-theme="dark"] .toc-link.is-active { background: rgba(82, 199, 200, .1); }
+    .toc-link.is-empty { opacity: .4; }
+    .toc-number { color: var(--gold); font-family: var(--serif); font-size: 12px; }
+    .toc-name { overflow: hidden; font-size: 11px; font-weight: 650; text-overflow: ellipsis; white-space: nowrap; }
+    .toc-count { min-width: 25px; padding: 2px 6px; border-radius: 999px; background: rgba(8, 127, 140, .07); font-size: 10px; text-align: center; }
+    html[data-theme="dark"] .toc-count { background: rgba(82, 199, 200, .08); }
+
+    .reading-pane { min-width: 0; }
+    .search-panel {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      padding: 15px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 253, 248, .92);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(22px);
+    }
+    html[data-theme="dark"] .search-panel { background: rgba(9, 29, 34, .93); }
+    .search-grid {
+      display: grid;
+      grid-template-columns: minmax(260px, 1fr) 210px auto;
+      gap: 11px;
+      align-items: end;
+    }
+    .field { min-width: 0; }
+    .field label { display: block; margin: 0 0 6px; color: var(--muted); font-size: 11px; font-weight: 700; letter-spacing: .025em; }
+    .search-wrap { position: relative; }
+    .search-icon {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      color: #718099;
+      font-size: 16px;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+    input[type="search"], select {
+      width: 100%;
+      min-height: 45px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .86);
+      color: var(--ink);
+      outline: none;
+      transition: border-color .18s ease, box-shadow .18s ease;
+    }
+    input[type="search"] { padding: 0 42px 0 39px; }
+    select { padding: 0 12px; }
+    input[type="search"]::placeholder { color: #87999a; }
+    html[data-theme="dark"] input[type="search"],
+    html[data-theme="dark"] select { background: rgba(4, 17, 21, .76); }
+    html[data-theme="dark"] input[type="search"]::placeholder { color: #6f898a; }
+    input[type="search"]:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(8, 127, 140, .11); }
+    .clear-search {
+      position: absolute;
+      right: 7px;
+      top: 50%;
+      width: 31px;
+      height: 31px;
+      display: grid;
+      place-items: center;
+      border: 0;
+      border-radius: 9px;
+      background: transparent;
+      color: var(--muted);
+      transform: translateY(-50%);
+    }
+    .clear-search:hover { background: rgba(8, 127, 140, .08); color: var(--ink); }
+    html[data-theme="dark"] .clear-search:hover { background: rgba(82, 199, 200, .09); }
+    .clear-search[hidden] { display: none; }
+    .reset-button {
+      min-height: 45px;
+      padding: 0 14px;
+      border: 1px solid var(--line-strong);
+      border-radius: 12px;
+      background: var(--surface-2);
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .reset-button:hover { border-color: rgba(8, 127, 140, .55); }
+    .results-bar {
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 12px;
+      margin-top: 11px;
+      padding-top: 11px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 11px;
+    }
+
+    .book { margin-top: 23px; }
+    .law-title {
+      scroll-margin-top: 154px;
+      overflow: hidden;
+      margin-bottom: 24px;
+      border: 1px solid var(--line);
+      border-radius: 20px;
+      background: rgba(255, 253, 248, .86);
+      box-shadow: 0 18px 50px rgba(25, 61, 61, .09);
+    }
+    html[data-theme="dark"] .law-title { background: rgba(10, 29, 34, .82); box-shadow: 0 18px 50px rgba(0, 0, 0, .17); }
+    .title-heading {
+      position: relative;
+      padding: 25px 26px 22px;
+      border-bottom: 1px solid var(--line);
+      background:
+        linear-gradient(90deg, rgba(200, 126, 50, .1), transparent 48%),
+        linear-gradient(180deg, rgba(235, 244, 239, .96), rgba(225, 238, 233, .92));
+    }
+    html[data-theme="dark"] .title-heading {
+      background:
+        linear-gradient(90deg, rgba(233, 172, 97, .1), transparent 48%),
+        linear-gradient(180deg, rgba(20, 48, 54, .96), rgba(11, 31, 36, .94));
+    }
+    .title-heading::after {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 4px;
+      background: var(--gold);
+      content: "";
+    }
+    .title-label { color: var(--gold); font-size: 10px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase; }
+    .title-heading h2 { margin: 5px 0 0; font-family: var(--serif); font-size: clamp(23px, 3vw, 31px); font-weight: 600; letter-spacing: -.02em; }
+    .title-meta { display: flex; flex-wrap: wrap; gap: 8px 15px; margin-top: 8px; color: var(--muted); font-size: 11px; }
+    .statutes { padding: 0 21px; }
+    .statute {
+      position: relative;
+      display: grid;
+      grid-template-columns: 92px minmax(0, 1fr) auto;
+      gap: 18px;
+      align-items: center;
+      min-height: 84px;
+      padding: 16px 4px;
+      border-bottom: 1px solid rgba(27, 82, 86, .11);
+    }
+    .statute:last-child { border-bottom: 0; }
+    .statute::before {
+      position: absolute;
+      left: -21px;
+      top: 13px;
+      bottom: 13px;
+      width: 3px;
+      border-radius: 0 4px 4px 0;
+      background: var(--category-color);
+      content: "";
+    }
+    .statute-number { color: #31585c; font-family: var(--serif); font-size: 18px; font-weight: 600; font-variant-numeric: tabular-nums; }
+    html[data-theme="dark"] .statute-number { color: #c6d8d7; }
+    .statute-name { margin: 0; font-family: var(--serif); font-size: 18px; font-weight: 600; line-height: 1.3; }
+    .statute-meta { display: flex; align-items: center; justify-content: flex-end; gap: 9px; }
+    .classification {
+      min-height: 27px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 9px;
+      border: 1px solid color-mix(in srgb, var(--category-color) 38%, transparent);
+      border-radius: 999px;
+      background: color-mix(in srgb, var(--category-color) 10%, transparent);
+      color: var(--category-color);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: .055em;
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+    .penalty { min-width: 58px; color: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+    .category-infraction { --category-color: var(--infraction); }
+    .category-misdemeanor { --category-color: var(--misdemeanor); }
+    .category-felony { --category-color: var(--felony); }
+    .category-capital { --category-color: var(--capital); }
+    .empty-state {
+      padding: 72px 24px;
+      border: 1px dashed var(--line-strong);
+      border-radius: 20px;
+      color: var(--muted);
+      text-align: center;
+    }
+    .empty-state strong { display: block; margin-bottom: 5px; color: var(--ink); font-family: var(--serif); font-size: 22px; }
+    @media (max-width: 980px) {
+      .mobile-chapter-bar { display: block; }
+      .book-layout { grid-template-columns: 1fr; margin-top: 16px; }
+      .toc { display: none; }
+      .search-grid { grid-template-columns: minmax(0, 1fr) 190px auto; }
+      .law-title { scroll-margin-top: 175px; }
+    }
+    @media (max-width: 720px) {
+      .masthead { width: min(100% - 30px, 1400px); padding: 25px 0 23px; align-items: flex-start; }
+      .masthead-meta { flex-direction: column; align-items: stretch; }
+      .book-layout { width: min(100% - 30px, 1400px); }
+      .search-panel { position: relative; }
+      .search-grid { grid-template-columns: 1fr 1fr; }
+      .field-search { grid-column: 1 / -1; }
+      .reset-button { align-self: end; }
+      .law-title { scroll-margin-top: 20px; }
+      .title-heading { padding: 21px 20px 18px; }
+      .statutes { padding: 0 17px; }
+      .statute { grid-template-columns: 76px minmax(0, 1fr); gap: 12px; padding: 15px 2px; }
+      .statute::before { left: -17px; }
+      .statute-name { font-size: 17px; }
+      .statute-meta { grid-column: 2; justify-content: flex-start; margin-top: -5px; }
+    }
+    @media (max-width: 480px) {
+      .masthead { flex-direction: column; gap: 16px; }
+      .subtitle { font-size: 12px; }
+      .masthead-meta { width: 100%; margin-left: 0; }
+      .theme-button { width: 100%; }
+      .search-grid { grid-template-columns: 1fr; }
+      .field-search { grid-column: auto; }
+      .reset-button { width: 100%; }
+      .title-heading h2 { font-size: 23px; }
+      .statute { grid-template-columns: 1fr; gap: 4px; }
+      .statute-number { font-size: 15px; }
+      .statute-meta { grid-column: auto; justify-content: space-between; margin-top: 7px; }
+      .statute-name { font-size: 18px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      *, *::before, *::after { transition-duration: .01ms !important; }
+      h1 { animation: none; color: var(--infraction); }
+    }
+    @media print {
+      :root { color-scheme: light; --ink: #111; --muted: #555; --page: #fff; --surface: #fff; --surface-2: #f4f4f4; --line: #bbb; --line-strong: #999; }
+      body { background: #fff; }
+      .site-header, .mobile-chapter-bar, .toc, .search-panel { display: none !important; }
+      .book-layout { display: block; width: 100%; margin: 0; }
+      .book { margin: 0; }
+      .law-title { break-before: page; border: 0; box-shadow: none; }
+      .law-title:first-child { break-before: auto; }
+      .title-heading { background: #eee; }
+      .statute { break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="masthead">
+      <div class="brand">
+        <h1>Ventura Penal Code</h1>
+        <p class="subtitle">Made by Kyrie2781</p>
+      </div>
+      <div class="masthead-meta">
+        <button class="theme-button" id="themeToggle" type="button" aria-pressed="false"><span class="theme-icon" id="themeIcon" aria-hidden="true">☾</span><span id="themeLabel">Dark mode</span></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-chapter-bar">
+    <label for="chapterSelect">Jump to a title</label>
+    <select id="chapterSelect" aria-label="Jump to a title"></select>
+  </div>
+
+  <main class="book-layout">
+    <aside class="toc" aria-label="Table of contents">
+      <div class="toc-header">
+        <span class="toc-kicker">Codebook</span>
+        <div class="toc-title"><strong>Contents</strong><span>12 titles</span></div>
+      </div>
+      <nav class="toc-list" id="tocList"></nav>
+    </aside>
+
+    <section class="reading-pane" aria-label="Statutory charges">
+      <div class="search-panel">
+        <div class="search-grid">
+          <div class="field field-search">
+            <div class="search-wrap">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input id="searchInput" type="search" aria-label="Search statute, offense, or related charge" placeholder="Try murder, homicide, 1103..." autocomplete="off">
+              <button class="clear-search" id="clearSearch" type="button" aria-label="Clear search" hidden>×</button>
+            </div>
+          </div>
+          <div class="field">
+            <label for="categoryFilter">Classification</label>
+            <select id="categoryFilter">
+              <option value="all">All classifications</option>
+              <option value="infraction">Infraction</option>
+              <option value="misdemeanor">Misdemeanor</option>
+              <option value="felony">Felony</option>
+              <option value="capital">Capital</option>
+            </select>
+          </div>
+          <button class="reset-button" id="resetFilters" type="button">Reset</button>
+        </div>
+        <div class="results-bar">
+          <span id="resultStatus" aria-live="polite">257 statutes across 12 titles</span>
+        </div>
+      </div>
+      <div class="book" id="book"></div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      'use strict';
+
+      var charges = [{"code":101,"name":"Jaywalking","category":"infraction","mins":0},{"code":102,"name":"Littering / Illegal Dumping","category":"misdemeanor","mins":1},{"code":103,"name":"Loitering","category":"misdemeanor","mins":1},{"code":104,"name":"Loitering in a Restricted Area","category":"misdemeanor","mins":2},{"code":105,"name":"Public Nuisance / Excessive Noise","category":"misdemeanor","mins":1},{"code":106,"name":"Disorderly Conduct","category":"misdemeanor","mins":2},{"code":107,"name":"Disturbing the Peace","category":"misdemeanor","mins":2},{"code":108,"name":"Public Intoxication (Non-Violent)","category":"misdemeanor","mins":2},{"code":109,"name":"Offensive Public Conduct","category":"misdemeanor","mins":2},{"code":110,"name":"Unsanitary Public Conduct","category":"misdemeanor","mins":1},{"code":111,"name":"Trespassing","category":"misdemeanor","mins":3},{"code":112,"name":"Trespassing (Posted / No-Entry Zone)","category":"misdemeanor","mins":4},{"code":113,"name":"Aggressive Panhandling","category":"misdemeanor","mins":2},{"code":114,"name":"Fare Evasion (Public Transport)","category":"misdemeanor","mins":1},{"code":115,"name":"Vandalism / Graffiti (Minor)","category":"misdemeanor","mins":3},{"code":116,"name":"Curfew Violation","category":"infraction","mins":0},{"code":117,"name":"Unlicensed Street Vending","category":"misdemeanor","mins":1},{"code":118,"name":"Obstructing a Public Sidewalk or Path","category":"misdemeanor","mins":1},{"code":119,"name":"Unauthorized Posting of Signs or Flyers","category":"infraction","mins":0},{"code":120,"name":"Unauthorized Use of Public Utilities","category":"misdemeanor","mins":3},{"code":121,"name":"Tampering with Public Property (Minor)","category":"misdemeanor","mins":3},{"code":122,"name":"Unauthorized Climbing of a Structure","category":"misdemeanor","mins":3},{"code":123,"name":"Animal at Large / Failure to Leash","category":"infraction","mins":0},{"code":124,"name":"Unauthorized Public Assembly Without Permit","category":"misdemeanor","mins":2},{"code":125,"name":"Disturbing the Peace After 10:00 PM","category":"misdemeanor","mins":2},{"code":201,"name":"Simple Assault (No Weapon)","category":"misdemeanor","mins":5},{"code":202,"name":"Assault by Threat or Offensive Contact","category":"misdemeanor","mins":3},{"code":203,"name":"Unwanted Physical Contact (Non-Injury)","category":"misdemeanor","mins":4},{"code":204,"name":"Harassment","category":"misdemeanor","mins":4},{"code":205,"name":"Stalking","category":"misdemeanor","mins":6},{"code":206,"name":"Criminal Threat (Threat of Serious Harm)","category":"misdemeanor","mins":6},{"code":207,"name":"Deadly Conduct (Reckless Endangerment)","category":"misdemeanor","mins":6},{"code":208,"name":"Assault with a Deadly Weapon","category":"felony","mins":12},{"code":209,"name":"Aggravated Assault","category":"felony","mins":15},{"code":210,"name":"Aggravated Assault on a Protected Servant","category":"felony","mins":18},{"code":211,"name":"Unlawful Restraint","category":"misdemeanor","mins":6},{"code":212,"name":"Kidnapping","category":"felony","mins":20},{"code":213,"name":"Aggravated Kidnapping / Hostage-Taking","category":"felony","mins":24},{"code":214,"name":"Robbery","category":"felony","mins":18},{"code":215,"name":"Aggravated Robbery (Armed)","category":"felony","mins":22},{"code":216,"name":"Assault on a Peace Officer or Protected Servant","category":"felony","mins":20},{"code":217,"name":"Manslaughter","category":"felony","mins":25},{"code":218,"name":"Criminally Negligent Homicide","category":"felony","mins":18},{"code":219,"name":"Injury to a Child, Elderly, or Disabled Individual","category":"felony","mins":18},{"code":220,"name":"Endangerment of a Child","category":"felony","mins":12},{"code":221,"name":"Coercion or Intimidation","category":"misdemeanor","mins":5},{"code":222,"name":"Threat of Serious Public Harm","category":"felony","mins":12},{"code":301,"name":"Petty Theft","category":"misdemeanor","mins":4},{"code":302,"name":"Theft of Services","category":"misdemeanor","mins":4},{"code":303,"name":"Shoplifting","category":"misdemeanor","mins":4},{"code":304,"name":"Criminal Mischief (Property Damage)","category":"misdemeanor","mins":4},{"code":305,"name":"Burglary of a Vehicle","category":"misdemeanor","mins":5},{"code":306,"name":"Unauthorized Use of a Vehicle","category":"felony","mins":10},{"code":307,"name":"Grand Theft","category":"felony","mins":12},{"code":308,"name":"Grand Theft Auto","category":"felony","mins":14},{"code":309,"name":"Burglary (Breaking & Entering)","category":"felony","mins":15},{"code":310,"name":"Burglary of a Habitation","category":"felony","mins":18},{"code":311,"name":"Armed Home Invasion","category":"felony","mins":22},{"code":312,"name":"Arson (Non-Homicidal)","category":"felony","mins":22},{"code":313,"name":"Extortion / Blackmail","category":"felony","mins":15},{"code":314,"name":"Fraud","category":"felony","mins":12},{"code":315,"name":"Forgery","category":"felony","mins":12},{"code":316,"name":"Identity Theft","category":"felony","mins":12},{"code":317,"name":"Possession of Stolen Property","category":"misdemeanor","mins":5},{"code":318,"name":"Receiving or Trafficking Stolen Goods","category":"felony","mins":12},{"code":319,"name":"Money Laundering","category":"felony","mins":15},{"code":320,"name":"Counterfeit Currency or Documents","category":"felony","mins":15},{"code":321,"name":"Tampering with an ATM or Vending Machine","category":"misdemeanor","mins":6},{"code":322,"name":"Looting During an Emergency","category":"felony","mins":12},{"code":401,"name":"Carrying a Firearm in a Prohibited Place","category":"misdemeanor","mins":5},{"code":402,"name":"Carrying a Firearm in a Secure Government Facility","category":"felony","mins":10},{"code":403,"name":"Prohibited Person in Possession of a Firearm","category":"felony","mins":15},{"code":404,"name":"Possession of a Prohibited Weapon","category":"felony","mins":18},{"code":405,"name":"Possession of a Destructive Device","category":"felony","mins":20},{"code":406,"name":"Carrying a Firearm While Committing a Felony","category":"felony","mins":20},{"code":407,"name":"Reckless Discharge of a Firearm","category":"misdemeanor","mins":6},{"code":408,"name":"Brandishing a Deadly Weapon","category":"misdemeanor","mins":6},{"code":409,"name":"Brandishing a Deadly Weapon at a Peace Officer","category":"felony","mins":15},{"code":410,"name":"Unlawful Transfer of a Firearm","category":"felony","mins":12},{"code":411,"name":"Possession of a Stolen Firearm","category":"felony","mins":15},{"code":412,"name":"Reckless Display of a Fake Weapon","category":"misdemeanor","mins":4},{"code":413,"name":"Manufacture of Prohibited Weapons","category":"felony","mins":18},{"code":414,"name":"Carrying a Weapon in a Posted Gun-Free Zone (Legally Displayed Sign)","category":"misdemeanor","mins":5},{"code":415,"name":"Unlawful Possession of a Firearm by a Felon","category":"felony","mins":15},{"code":416,"name":"Carrying a Weapon While Intoxicated","category":"misdemeanor","mins":5},{"code":501,"name":"Possession of Chems / Plants","category":"felony","mins":12},{"code":502,"name":"Possession of a Large Quantity of Chems / Plants","category":"felony","mins":15},{"code":503,"name":"Manufacture or Production of Chems / Plants","category":"felony","mins":18},{"code":504,"name":"Distribution or Sale of Chems / Plants","category":"felony","mins":18},{"code":505,"name":"Trafficking of Chems / Plants","category":"felony","mins":20},{"code":506,"name":"Operating a Chem / Plant Production Facility","category":"felony","mins":20},{"code":507,"name":"Possession of Equipment to Produce Chems / Plants","category":"felony","mins":12},{"code":508,"name":"Driving While Intoxicated","category":"misdemeanor","mins":5},{"code":509,"name":"Intoxication Assault","category":"felony","mins":12},{"code":510,"name":"Intoxication Manslaughter","category":"felony","mins":20},{"code":511,"name":"Public Health Violation (Unsafe Food Handling)","category":"misdemeanor","mins":3},{"code":512,"name":"Operating a Food Establishment After Closure Order","category":"misdemeanor","mins":4},{"code":513,"name":"Improper Disposal of Hazardous Material","category":"misdemeanor","mins":5},{"code":601,"name":"Failure to Identify","category":"infraction","mins":0},{"code":602,"name":"Giving False Identification to an Officer","category":"misdemeanor","mins":2},{"code":603,"name":"Resisting Arrest (Non-Violent)","category":"misdemeanor","mins":5},{"code":604,"name":"Resisting Arrest (Violent)","category":"felony","mins":12},{"code":605,"name":"Evading on Foot","category":"misdemeanor","mins":5},{"code":606,"name":"Escape from Custody (Non-Violent)","category":"misdemeanor","mins":6},{"code":607,"name":"Escape from Custody (Violent)","category":"felony","mins":15},{"code":608,"name":"Obstruction of a Government Worker","category":"misdemeanor","mins":5},{"code":609,"name":"Interference with Public Duties","category":"misdemeanor","mins":3},{"code":610,"name":"Failure to Obey a Lawful Order","category":"misdemeanor","mins":3},{"code":611,"name":"Filing a False Report","category":"misdemeanor","mins":3},{"code":612,"name":"Tampering with Evidence","category":"felony","mins":10},{"code":613,"name":"Tampering with a Government Record","category":"felony","mins":10},{"code":614,"name":"Perjury / False Testimony","category":"felony","mins":10},{"code":615,"name":"Bribery of a Public Servant","category":"felony","mins":12},{"code":616,"name":"Witness Intimidation","category":"felony","mins":12},{"code":617,"name":"Jury Tampering","category":"felony","mins":12},{"code":618,"name":"Aiding Escape or Harboring a Fugitive","category":"felony","mins":12},{"code":619,"name":"Threats Against a Public Official","category":"felony","mins":12},{"code":620,"name":"Impersonating a Peace Officer","category":"felony","mins":15},{"code":621,"name":"Impersonating Emergency Medical Services","category":"misdemeanor","mins":8},{"code":622,"name":"Impersonating a Fire Official","category":"misdemeanor","mins":8},{"code":623,"name":"Impersonating a Public Official","category":"felony","mins":12},{"code":624,"name":"Contempt of Court","category":"misdemeanor","mins":5},{"code":625,"name":"Interfering with a Police Scene or Traffic Stop","category":"misdemeanor","mins":5},{"code":701,"name":"Parking in a No-Parking Zone","category":"infraction","mins":0},{"code":702,"name":"Parking at a Fire Hydrant","category":"infraction","mins":0},{"code":703,"name":"Parking in a Disabled Spot Without Permit","category":"infraction","mins":0},{"code":704,"name":"Blocking a Driveway or Crosswalk","category":"infraction","mins":0},{"code":705,"name":"Double Parking","category":"infraction","mins":0},{"code":706,"name":"Parking Against the Flow of Traffic","category":"infraction","mins":0},{"code":707,"name":"Parking in a Loading Zone","category":"infraction","mins":0},{"code":708,"name":"Parking in a Bus Zone","category":"infraction","mins":0},{"code":709,"name":"Expired Parking Meter","category":"infraction","mins":0},{"code":710,"name":"Expired Registration","category":"infraction","mins":0},{"code":711,"name":"Expired Inspection","category":"infraction","mins":0},{"code":712,"name":"Broken Tail Light or Headlight","category":"infraction","mins":0},{"code":713,"name":"Illegal Window Tint","category":"infraction","mins":0},{"code":714,"name":"Failure to Signal","category":"infraction","mins":0},{"code":715,"name":"Failure to Yield","category":"infraction","mins":0},{"code":716,"name":"Failure to Yield to a Pedestrian","category":"infraction","mins":0},{"code":717,"name":"Failure to Wear a Seatbelt","category":"infraction","mins":0},{"code":718,"name":"Child Not Secured in a Safety Seat","category":"infraction","mins":0},{"code":719,"name":"Unsafe Lane Change","category":"infraction","mins":0},{"code":720,"name":"Illegal U-Turn","category":"infraction","mins":0},{"code":721,"name":"Improper Turn","category":"infraction","mins":0},{"code":722,"name":"Failure to Maintain Lane","category":"infraction","mins":0},{"code":723,"name":"Unsafe Following Distance (Tailgating)","category":"infraction","mins":0},{"code":724,"name":"Improper Passing","category":"infraction","mins":0},{"code":725,"name":"Loud Music or Exhaust from a Vehicle","category":"infraction","mins":0},{"code":726,"name":"Driving Without Headlights at Night","category":"infraction","mins":0},{"code":727,"name":"Failure to Use Headlights in Poor Visibility","category":"infraction","mins":0},{"code":728,"name":"Improper Use of High Beams","category":"infraction","mins":0},{"code":729,"name":"Obstructed or Missing License Plate","category":"infraction","mins":0},{"code":730,"name":"Unsecured Load","category":"infraction","mins":0},{"code":731,"name":"Excessive Idling","category":"infraction","mins":0},{"code":732,"name":"Driving Too Slowly / Impeding Traffic","category":"infraction","mins":0},{"code":733,"name":"Use of a Mobile Device While Driving","category":"infraction","mins":0},{"code":734,"name":"Failure to Stop at a Railroad Crossing","category":"infraction","mins":0},{"code":735,"name":"Unauthorized Use of the Emergency Lane or Shoulder","category":"infraction","mins":0},{"code":736,"name":"Improper Backing","category":"infraction","mins":0},{"code":737,"name":"Excessive Exhaust Smoke","category":"infraction","mins":0},{"code":738,"name":"Speeding (0–10 MPH Over Limit)","category":"infraction","mins":0},{"code":739,"name":"Speeding (11–20 MPH Over Limit)","category":"infraction","mins":0},{"code":740,"name":"Speeding (21–35 MPH Over Limit)","category":"infraction","mins":0},{"code":741,"name":"Speeding (35+ MPH Over Limit)","category":"misdemeanor","mins":5},{"code":742,"name":"Running a Red Light","category":"infraction","mins":0},{"code":743,"name":"Running a Stop Sign","category":"infraction","mins":0},{"code":744,"name":"Failure to Stop at a Yield Sign","category":"infraction","mins":0},{"code":745,"name":"No Proof of Insurance","category":"infraction","mins":0},{"code":746,"name":"Driving Without a Valid License","category":"misdemeanor","mins":2},{"code":747,"name":"Driving with a Suspended or Revoked License","category":"misdemeanor","mins":5},{"code":748,"name":"Driving an Unregistered Vehicle","category":"misdemeanor","mins":1},{"code":749,"name":"Reckless Driving","category":"misdemeanor","mins":5},{"code":750,"name":"Aggressive / Road Rage Driving","category":"misdemeanor","mins":4},{"code":751,"name":"Failure to Yield to an Emergency Vehicle","category":"misdemeanor","mins":3},{"code":752,"name":"Failure to Pull Over for Law Enforcement","category":"misdemeanor","mins":5},{"code":753,"name":"Driving on the Wrong Side of the Road (Felony)","category":"felony","mins":12},{"code":754,"name":"Driving on the Wrong Side of the Road (Reduced Citation)","category":"misdemeanor","mins":3},{"code":755,"name":"Evading Law Enforcement (Vehicle)","category":"felony","mins":12},{"code":756,"name":"Fleeing a Checkpoint","category":"felony","mins":10},{"code":757,"name":"Street Racing / Exhibition Driving","category":"felony","mins":10},{"code":758,"name":"Hit and Run (Property Damage)","category":"misdemeanor","mins":4},{"code":759,"name":"Hit and Run (Injury)","category":"felony","mins":15},{"code":760,"name":"Vehicular Assault","category":"felony","mins":15},{"code":761,"name":"Vehicular Manslaughter","category":"capital","mins":30},{"code":762,"name":"Using a Vehicle to Threaten or Intimidate","category":"felony","mins":10},{"code":763,"name":"Operating a Vehicle During a Felony","category":"felony","mins":18},{"code":764,"name":"Striking a Fixed Roadway Object (Pole / Sign / Light)","category":"infraction","mins":0},{"code":765,"name":"Failure to Stop at a Traffic Control Device","category":"infraction","mins":0},{"code":766,"name":"Failure to Stop at a Crosswalk","category":"infraction","mins":0},{"code":767,"name":"Lane Weaving","category":"infraction","mins":0},{"code":768,"name":"Driving with a Popped Tire or Smoking Vehicle (Unsafe Condition)","category":"infraction","mins":0},{"code":769,"name":"Crossing a Solid Yellow Line","category":"infraction","mins":0},{"code":770,"name":"Stopping in a Non-Designated Area Without Hazard Signals","category":"infraction","mins":0},{"code":771,"name":"Changing Lanes in an Intersection","category":"infraction","mins":0},{"code":772,"name":"Aggressive Tire Screeching (Peeling Out)","category":"infraction","mins":0},{"code":801,"name":"Juvenile in Possession of Alcohol","category":"misdemeanor","mins":2},{"code":802,"name":"Sale of Alcohol","category":"misdemeanor","mins":5},{"code":803,"name":"Open Container in Public","category":"infraction","mins":0},{"code":804,"name":"Open Container in a Vehicle","category":"infraction","mins":0},{"code":805,"name":"Serving Alcohol Without a Permit","category":"misdemeanor","mins":5},{"code":806,"name":"Over-Serving an Intoxicated Person","category":"misdemeanor","mins":4},{"code":807,"name":"Public Consumption in a Prohibited Zone","category":"infraction","mins":0},{"code":901,"name":"False Alarm or Report of Emergency","category":"misdemeanor","mins":5},{"code":902,"name":"Riot","category":"felony","mins":12},{"code":903,"name":"Inciting a Riot","category":"felony","mins":12},{"code":904,"name":"Obstructing a Highway or Passageway","category":"misdemeanor","mins":5},{"code":905,"name":"Blocking an Emergency Vehicle or Access","category":"misdemeanor","mins":6},{"code":906,"name":"Interference with Emergency Workers","category":"misdemeanor","mins":6},{"code":907,"name":"Unlawful Use of Fireworks","category":"misdemeanor","mins":3},{"code":908,"name":"Reckless Use of a Destructive Device (Non-Fatal)","category":"felony","mins":15},{"code":909,"name":"Refusing Evacuation During an Emergency","category":"misdemeanor","mins":5},{"code":910,"name":"Creating a Public Hazard","category":"misdemeanor","mins":5},{"code":911,"name":"Tampering with Safety or Fire Equipment","category":"misdemeanor","mins":5},{"code":912,"name":"Unauthorized Discharge of a Fire Suppression System","category":"misdemeanor","mins":4},{"code":1001,"name":"Official Oppression","category":"misdemeanor","mins":8},{"code":1002,"name":"Unlawful Arrest / Wrongful Detention","category":"felony","mins":8},{"code":1003,"name":"Excessive Use of Force","category":"felony","mins":12},{"code":1004,"name":"Unauthorized Use of Lethal Force","category":"felony","mins":18},{"code":1005,"name":"Fabrication of Evidence","category":"felony","mins":12},{"code":1006,"name":"Corruption or Bribery Within a Department","category":"felony","mins":15},{"code":1007,"name":"Abuse of Authority","category":"felony","mins":12},{"code":1008,"name":"Theft or Misuse of Seized Property","category":"felony","mins":10},{"code":1009,"name":"Using a Government Position to Commit a Crime","category":"felony","mins":18},{"code":1010,"name":"Filing a False Report as an Officer","category":"felony","mins":10},{"code":1011,"name":"Unlawful Search or Seizure","category":"felony","mins":8},{"code":1012,"name":"Tampering with Official Records or Footage","category":"felony","mins":10},{"code":1013,"name":"Dereliction of Duty","category":"misdemeanor","mins":5},{"code":1014,"name":"Misuse of Confidential Government Information","category":"felony","mins":10},{"code":1015,"name":"Responding to a Call Not Assigned To (Self-Dispatching)","category":"misdemeanor","mins":3},{"code":1016,"name":"Conduct Unbecoming an Officer","category":"misdemeanor","mins":6},{"code":1017,"name":"Failure to Intervene or Report Misconduct","category":"felony","mins":10},{"code":1018,"name":"Biased or Selective Enforcement","category":"felony","mins":12},{"code":1019,"name":"Unauthorized or Reckless Pursuit","category":"felony","mins":10},{"code":1020,"name":"Conducting a Stop Without Legal Basis","category":"misdemeanor","mins":6},{"code":1021,"name":"Failure to Activate or Maintain Recording Equipment","category":"misdemeanor","mins":5},{"code":1022,"name":"Unauthorized Operation of a Government Vehicle","category":"misdemeanor","mins":5},{"code":1023,"name":"Breach of Evidence Chain of Custody","category":"felony","mins":10},{"code":1024,"name":"Insubordination / Violating the Chain of Command","category":"misdemeanor","mins":5},{"code":1025,"name":"Supervisory Neglect","category":"felony","mins":8},{"code":1026,"name":"Unlawful Use of Force on a Detainee","category":"felony","mins":15},{"code":1027,"name":"Neglect or Denial of Inmate Medical Care","category":"felony","mins":12},{"code":1028,"name":"Denial of Access to Counsel or Visitation","category":"felony","mins":10},{"code":1101,"name":"Attempted Murder","category":"capital","mins":25},{"code":1102,"name":"Attempted Murder of a Peace Officer","category":"capital","mins":30},{"code":1103,"name":"Murder (Second Degree)","category":"capital","mins":35},{"code":1104,"name":"Murder (First Degree)","category":"capital","mins":45},{"code":1105,"name":"Capital Murder (Officer or Multiple Victims)","category":"capital","mins":60},{"code":1106,"name":"Aggravated Kidnapping Resulting in Serious Harm","category":"capital","mins":35},{"code":1107,"name":"Arson Endangering Human Life","category":"capital","mins":30},{"code":1201,"name":"Unlawful Arrest or Detention of a Protected State Agent","category":"felony","mins":15},{"code":1202,"name":"Interfering with VCIA or State Security Operations","category":"felony","mins":12},{"code":1203,"name":"Tampering with State Security Property or Records","category":"felony","mins":12},{"code":1204,"name":"Espionage Against the State","category":"felony","mins":18},{"code":1205,"name":"Sabotage of Critical Infrastructure","category":"capital","mins":40},{"code":1206,"name":"Treason / Conspiracy Against the State","category":"capital","mins":60},{"code":223,"name":"Dragging a Corpse","category":"misdemeanor","mins":8},{"code":846,"name":"Unpaid / Outstanding Citations","category":"misdemeanor","mins":5}];
+      var sections = [{"id":"public-order","label":"100–199 · Public Order & Community","min":100,"max":199,"roman":"I","title":"Public Order & Community"},{"id":"persons","label":"200–299 · Person & Violent Offenses","min":200,"max":299,"roman":"II","title":"Person & Violent Offenses"},{"id":"property","label":"300–399 · Property & Financial Crimes","min":300,"max":399,"roman":"III","title":"Property & Financial Crimes"},{"id":"weapons","label":"400–499 · Weapons & Firearms","min":400,"max":499,"roman":"IV","title":"Weapons & Firearms"},{"id":"substances","label":"500–599 · Substances & Public Health","min":500,"max":599,"roman":"V","title":"Substances & Public Health"},{"id":"justice","label":"600–699 · Justice & Obstruction","min":600,"max":699,"roman":"VI","title":"Justice & Obstruction"},{"id":"traffic","label":"700–799 · Traffic & Vehicle","min":700,"max":799,"roman":"VII","title":"Traffic & Vehicle"},{"id":"alcohol","label":"800–899 · Alcohol & Citations","min":800,"max":899,"roman":"VIII","title":"Alcohol & Citations"},{"id":"emergency","label":"900–999 · Emergency & Public Safety","min":900,"max":999,"roman":"IX","title":"Emergency & Public Safety"},{"id":"official","label":"1000–1099 · Official Misconduct","min":1000,"max":1099,"roman":"X","title":"Official Misconduct"},{"id":"capital-offenses","label":"1100–1199 · Capital Offenses","min":1100,"max":1199,"roman":"XI","title":"Capital Offenses"},{"id":"state-security","label":"1200–1299 · State Security","min":1200,"max":1299,"roman":"XII","title":"State Security"}];
+      var offenseFamilies = [
+        { triggers: ['murder', 'homicide', 'manslaughter', 'killing', 'kill', 'death'], related: ['murder', 'homicide', 'manslaughter'] },
+        { triggers: ['assault', 'battery', 'attack', 'injury', 'violence'], related: ['assault', 'battery', 'aggravated assault', 'deadly conduct'] },
+        { triggers: ['theft', 'steal', 'stolen', 'larceny', 'robbery', 'burglary'], related: ['theft', 'larceny', 'robbery', 'burglary', 'shoplifting', 'stolen'] },
+        { triggers: ['gun', 'firearm', 'weapon', 'pistol', 'rifle', 'ammunition'], related: ['firearm', 'weapon', 'pistol', 'rifle', 'ammunition', 'deadly weapon'] },
+        { triggers: ['drug', 'drugs', 'narcotic', 'narcotics', 'substance', 'controlled substance'], related: ['drug', 'narcotic', 'substance', 'marijuana', 'cocaine', 'methamphetamine', 'heroin', 'paraphernalia'] },
+        { triggers: ['kidnap', 'kidnapping', 'abduction', 'abduct', 'hostage'], related: ['kidnap', 'abduct', 'hostage', 'unlawful restraint'] },
+        { triggers: ['fraud', 'scam', 'forgery', 'identity theft'], related: ['fraud', 'forgery', 'identity', 'counterfeit', 'deceptive'] },
+        { triggers: ['arson', 'fire', 'burning'], related: ['arson', 'fire', 'burn'] },
+        { triggers: ['dui', 'dwi', 'drunk', 'alcohol', 'intoxicated', 'intoxication'], related: ['dui', 'dwi', 'alcohol', 'intoxicated', 'intoxication', 'open container'] },
+        { triggers: ['traffic', 'driving', 'driver', 'vehicle', 'car'], related: ['driving', 'driver', 'vehicle', 'traffic', 'speeding', 'parking', 'license', 'registration'] },
+        { triggers: ['evade', 'evading', 'flee', 'fleeing', 'pursuit'], related: ['evading', 'fleeing', 'failure to stop', 'pursuit'] },
+        { triggers: ['bomb', 'explosive', 'terror', 'terrorism'], related: ['bomb', 'explosive', 'terror', 'destructive device'] },
+        { triggers: ['police', 'officer', 'peace officer', 'law enforcement'], related: ['officer', 'peace officer', 'law enforcement', 'police'] },
+        { triggers: ['rape', 'sexual', 'sex offense'], related: ['rape', 'sexual', 'indecency', 'prostitution'] }
+      ];
+      var book = document.getElementById('book');
+      var tocList = document.getElementById('tocList');
+      var chapterSelect = document.getElementById('chapterSelect');
+      var searchInput = document.getElementById('searchInput');
+      var clearSearch = document.getElementById('clearSearch');
+      var categoryFilter = document.getElementById('categoryFilter');
+      var resetFilters = document.getElementById('resetFilters');
+      var resultStatus = document.getElementById('resultStatus');
+      var themeToggle = document.getElementById('themeToggle');
+      var themeIcon = document.getElementById('themeIcon');
+      var themeLabel = document.getElementById('themeLabel');
+      var themeColor = document.getElementById('themeColor');
+
+      function escapeHtml(value) {
+        return String(value)
+          .replaceAll('&', '&amp;')
+          .replaceAll('<', '&lt;')
+          .replaceAll('>', '&gt;')
+          .replaceAll('"', '&quot;')
+          .replaceAll("'", '&#039;');
+      }
+
+      function titleCase(value) {
+        return value.charAt(0).toUpperCase() + value.slice(1);
+      }
+
+      function initialTheme() {
+        try {
+          var savedTheme = window.localStorage.getItem('ventura-theme');
+          if (savedTheme === 'light' || savedTheme === 'dark') return savedTheme;
+        } catch (error) {}
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+      }
+
+      function applyTheme(theme, remember) {
+        document.documentElement.dataset.theme = theme;
+        var isDark = theme === 'dark';
+        themeToggle.setAttribute('aria-pressed', String(isDark));
+        themeIcon.textContent = isDark ? '☀' : '☾';
+        themeLabel.textContent = isDark ? 'Light mode' : 'Dark mode';
+        themeColor.setAttribute('content', isDark ? '#061518' : '#0b4a53');
+        if (remember) {
+          try { window.localStorage.setItem('ventura-theme', theme); } catch (error) {}
+        }
+      }
+
+      function normalize(value) {
+        return String(value)
+          .toLowerCase()
+          .normalize('NFD')
+          .replace(/[\u0300-\u036f]/g, '')
+          .replace(/[^a-z0-9]+/g, ' ')
+          .trim();
+      }
+
+      function withinOneEdit(left, right) {
+        if (left === right) return true;
+        if (Math.abs(left.length - right.length) > 1) return false;
+        var longer = left.length >= right.length ? left : right;
+        var shorter = left.length >= right.length ? right : left;
+        var longIndex = 0;
+        var shortIndex = 0;
+        var edits = 0;
+        while (longIndex < longer.length && shortIndex < shorter.length) {
+          if (longer[longIndex] === shorter[shortIndex]) {
+            longIndex += 1;
+            shortIndex += 1;
+          } else {
+            edits += 1;
+            if (edits > 1) return false;
+            longIndex += 1;
+            if (longer.length === shorter.length) shortIndex += 1;
+          }
+        }
+        return true;
+      }
+
+      function relatedFamilies(query) {
+        if (!query) return [];
+        var words = query.split(' ').filter(function (word) { return word.length > 2; });
+        return offenseFamilies.filter(function (family) {
+          return family.triggers.some(function (trigger) {
+            var normalizedTrigger = normalize(trigger);
+            if (query.indexOf(normalizedTrigger) !== -1 || normalizedTrigger.indexOf(query) !== -1) return true;
+            return words.some(function (word) {
+              return word === normalizedTrigger || (word.length > 3 && withinOneEdit(word, normalizedTrigger));
+            });
+          });
+        });
+      }
+
+      function sectionFor(charge) {
+        return sections.find(function (section) {
+          return charge.code >= section.min && charge.code <= section.max;
+        });
+      }
+
+      function searchScore(charge, query) {
+        if (!query) return 1;
+        var section = sectionFor(charge);
+        var name = normalize(charge.name);
+        var context = normalize([charge.code, charge.name, charge.category, section.title, section.label].join(' '));
+        var words = query.split(' ').filter(Boolean);
+
+        if (/^\d+$/.test(query)) return String(charge.code) === query ? 10000 : 0;
+        if (String(charge.code) === query) return 10000;
+        if (name === query) return 9500;
+        if (name.indexOf(query) === 0) return 9000;
+        if (name.indexOf(query) !== -1) return 8500;
+        if (words.length && words.every(function (word) { return context.indexOf(word) !== -1; })) return 7500;
+
+        var families = relatedFamilies(query);
+        var related = families.some(function (family) {
+          return family.related.some(function (term) { return name.indexOf(normalize(term)) !== -1; });
+        });
+        if (related) return 5500;
+
+        if (context.indexOf(query) !== -1) return 4500;
+        var contextWords = context.split(' ');
+        var fuzzy = words.some(function (word) {
+          if (word.length < 4) return false;
+          return contextWords.some(function (candidate) {
+            return candidate.indexOf(word) === 0 || withinOneEdit(word, candidate);
+          });
+        });
+        if (fuzzy) return 2500;
+        return 0;
+      }
+
+      function filteredCharges() {
+        var query = normalize(searchInput.value);
+        var classification = categoryFilter.value;
+        return charges.filter(function (charge) {
+          var categoryMatches = classification === 'all' || charge.category === classification;
+          return categoryMatches && searchScore(charge, query) > 0;
+        });
+      }
+
+      function statuteMarkup(charge) {
+        return '<article class="statute category-' + charge.category + '">' +
+          '<div class="statute-number">' + charge.code + '</div>' +
+          '<h3 class="statute-name">' + escapeHtml(charge.name) + '</h3>' +
+          '<div class="statute-meta">' +
+            '<span class="classification">' + titleCase(charge.category) + '</span>' +
+            '<span class="penalty">' + charge.mins + ' min</span>' +
+          '</div>' +
+        '</article>';
+      }
+
+      function sectionMarkup(section, items) {
+        return '<section class="law-title" id="title-' + section.id + '">' +
+          '<header class="title-heading">' +
+            '<div class="title-label">Title ' + section.roman + '</div>' +
+            '<h2>' + escapeHtml(section.title) + '</h2>' +
+            '<div class="title-meta"><span>' + section.min + '–' + section.max + '</span><span>' + items.length + ' ' + (items.length === 1 ? 'statute' : 'statutes') + '</span></div>' +
+          '</header>' +
+          '<div class="statutes">' + items.map(statuteMarkup).join('') + '</div>' +
+        '</section>';
+      }
+
+      function renderNavigation(counts) {
+        tocList.innerHTML = sections.map(function (section) {
+          var count = counts[section.id] || 0;
+          return '<a class="toc-link' + (count ? '' : ' is-empty') + '" href="#title-' + section.id + '" data-section="' + section.id + '">' +
+            '<span class="toc-number">' + section.roman + '</span>' +
+            '<span class="toc-name">' + escapeHtml(section.title) + '</span>' +
+            '<span class="toc-count">' + count + '</span>' +
+          '</a>';
+        }).join('');
+      }
+
+      function render() {
+        var filtered = filteredCharges();
+        var query = normalize(searchInput.value);
+        var visibleSections = [];
+        var counts = {};
+
+        sections.forEach(function (section) {
+          var items = filtered
+            .filter(function (charge) { return sectionFor(charge).id === section.id; })
+            .sort(function (left, right) {
+              return searchScore(right, query) - searchScore(left, query) || left.code - right.code;
+            });
+          counts[section.id] = items.length;
+          if (items.length) visibleSections.push({ section: section, items: items });
+        });
+
+        if (visibleSections.length) {
+          book.innerHTML = visibleSections.map(function (group) {
+            return sectionMarkup(group.section, group.items);
+          }).join('');
+        } else {
+          book.innerHTML = '<div class="empty-state"><strong>No matching statutes</strong><span>Try another number, charge name, title, or classification.</span></div>';
+        }
+
+        var related = relatedFamilies(query).length > 0;
+        var resultLead = filtered.length + ' ' + (filtered.length === 1 ? 'statute' : 'statutes');
+        if (query) resultLead += related ? ' related to “' + searchInput.value.trim() + '”' : ' matching “' + searchInput.value.trim() + '”';
+        resultStatus.textContent = resultLead + ' across ' + visibleSections.length + ' ' + (visibleSections.length === 1 ? 'title' : 'titles');
+        clearSearch.hidden = searchInput.value.length === 0;
+        renderNavigation(counts);
+      }
+
+      function reset() {
+        searchInput.value = '';
+        categoryFilter.value = 'all';
+        render();
+        searchInput.focus();
+      }
+
+      chapterSelect.innerHTML = '<option value="">Jump to a title…</option>' + sections.map(function (section) {
+        return '<option value="title-' + section.id + '">Title ' + section.roman + ' — ' + escapeHtml(section.title) + '</option>';
+      }).join('');
+
+      searchInput.addEventListener('input', render);
+      categoryFilter.addEventListener('change', render);
+      clearSearch.addEventListener('click', function () { searchInput.value = ''; render(); searchInput.focus(); });
+      resetFilters.addEventListener('click', reset);
+      themeToggle.addEventListener('click', function () {
+        var nextTheme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        applyTheme(nextTheme, true);
+      });
+      chapterSelect.addEventListener('change', function () {
+        if (!chapterSelect.value) return;
+        var target = document.getElementById(chapterSelect.value);
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        chapterSelect.value = '';
+      });
+
+      document.addEventListener('keydown', function (event) {
+        if (event.key === '/' && document.activeElement !== searchInput && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT') {
+          event.preventDefault();
+          searchInput.focus();
+        }
+        if (event.key === 'Escape' && document.activeElement === searchInput && searchInput.value) {
+          searchInput.value = '';
+          render();
+        }
+      });
+
+      applyTheme(initialTheme(), false);
+      render();
+    }());
+  </script>
+</body>
+</html>
